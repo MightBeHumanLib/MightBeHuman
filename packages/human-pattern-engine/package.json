@@ -1,0 +1,9 @@
+{
+  "name": "@mightbehuman/human-pattern-engine",
+  "private": true,
+  "type": "module",
+  "version": "0.1.0",
+  "exports": {
+    ".": "./src/index.ts"
+  }
+}

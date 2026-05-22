@@ -1,0 +1,12 @@
+{
+  "name": "@mightbehuman/cli",
+  "private": true,
+  "type": "module",
+  "version": "0.1.0",
+  "bin": {
+    "might-be-human": "./src/main.ts"
+  },
+  "exports": {
+    ".": "./src/main.ts"
+  }
+}

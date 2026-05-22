@@ -1,0 +1,27 @@
+services:
+  api:
+    build:
+      context: .
+    command: npm run dev --workspace=@mightbehuman/api
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: development
+
+  web:
+    build:
+      context: .
+    command: npm run dev --workspace=@mightbehuman/web
+    ports:
+      - "3001:3000"
+    environment:
+      NODE_ENV: development
+
+  docs:
+    build:
+      context: .
+    command: npm run dev --workspace=@mightbehuman/docs
+    ports:
+      - "3002:3000"
+    environment:
+      NODE_ENV: development
