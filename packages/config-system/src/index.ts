@@ -99,6 +99,6 @@ export function loadRuntimeConfig(env: NodeJS.ProcessEnv = process.env): Runtime
     apiPort: readNumber(env.API_PORT, 3000),
     webPort: readNumber(env.WEB_PORT, 3001),
     docsPort: readNumber(env.DOCS_PORT, 3002),
-    electronStartUrl: env.ELECTRON_START_URL ?? "http://127.0.0.1:3000",
+    electronStartUrl: env.ELECTRON_START_URL ?? "http://127.0.0.1:3001",
   };
 }

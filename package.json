@@ -11,7 +11,7 @@
   "scripts": {
     "build": "tsc --noEmit",
     "build:web": "pnpm --filter @mightbehuman/web run build",
-    "build:docs": "pnpm --filter @mightbehuman/docs run build && pnpm --filter @mightbehuman/docs run export",
+    "build:docs": "pnpm --filter @mightbehuman/docs run build",
     "build:desktop": "pnpm --filter @mightbehuman/desktop run build:electron || true",
     "package:all": "pnpm run build:web && pnpm run build:docs && pnpm run build:desktop",
     "dev": "turbo run dev --parallel",

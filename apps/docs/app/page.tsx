@@ -1,9 +1,11 @@
+import { withDocsBasePath } from "../lib/base-path.js";
+
 export default function Page() {
   return (
     <main style={{ padding: 32, maxWidth: 1080, margin: "0 auto" }}>
       <header style={{ marginBottom: 32, borderBottom: "1px solid var(--border)", paddingBottom: 24, display: "flex", gap: 20, alignItems: "center", flexWrap: "wrap" }}>
         <div style={{ border: "1px solid var(--border)", borderRadius: 24, padding: 12, background: "var(--surface)" }}>
-          <img src="/logo.png" alt="MightBeHuman logo" width={84} height={84} />
+          <img src={withDocsBasePath("/logo.png")} alt="MightBeHuman logo" width={84} height={84} />
         </div>
         <div>
           <p style={{ color: "var(--muted)", letterSpacing: "0.24em", textTransform: "uppercase", fontSize: 12 }}>MightBeHuman Docs</p>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
 import "./globals.css";
+import { withDocsBasePath } from "../lib/base-path.js";
 
 export const metadata: Metadata = {
   title: {
@@ -11,8 +12,8 @@ export const metadata: Metadata = {
   description: "Documentation for the local-first humanization platform",
   applicationName: "MightBeHuman Docs",
   icons: {
-    icon: "/logo.png",
-    apple: "/logo.png",
+    icon: withDocsBasePath("/logo.png"),
+    apple: withDocsBasePath("/logo.png"),
   },
 };
 

@@ -9,8 +9,8 @@ permissions:
   contents: write
 
 jobs:
-  build:
-    name: Build installers and web
+  build-desktop:
+    name: Build desktop installers
     runs-on: ${{ matrix.runner }}
     strategy:
       matrix:
@@ -42,19 +42,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Build web app
-        run: pnpm run build:web
-
-      - name: Build docs (static export)
-        run: |
-          pnpm run build:docs || true
-
       - name: Build desktop installer
-        run: |
-          # Build only the platform-specific target on this runner
-          cd apps/desktop
-          npx electron-builder ${{ matrix.targetFlag }} || true
-        shell: bash
+        working-directory: apps/desktop
+        run: pnpm exec electron-builder ${{ matrix.targetFlag }}
 
       - name: Collect installers
         uses: actions/upload-artifact@v4
@@ -66,9 +56,44 @@ jobs:
             dist/*.dmg
             dist/*.zip
 
+  build-docs:
+    name: Build docs site
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Enable pnpm (Corepack)
+        run: |
+          corepack enable
+          corepack prepare pnpm@9.12.0 --activate
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build web app
+        run: pnpm run build:web
+
+      - name: Build docs static export
+        env:
+          NEXT_PUBLIC_BASE_PATH: /MightBeHuman
+        run: pnpm run build:docs
+
+      - name: Upload docs site
+        uses: actions/upload-artifact@v4
+        with:
+          name: docs-site
+          path: apps/docs/out
+
   release:
     name: Create Release and Publish Pages
-    needs: build
+    needs: [build-desktop, build-docs]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -92,6 +117,12 @@ jobs:
         with:
           name: installers-macos
           path: ./dist
+
+      - name: Download docs site
+        uses: actions/download-artifact@v4
+        with:
+          name: docs-site
+          path: ./apps/docs/out
 
       - name: Compute tag
         id: tag

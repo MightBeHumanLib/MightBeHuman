@@ -7,16 +7,15 @@
     "dev": "electron --require tsx/register ./src/main.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "build:electron": "electron-builder --config build"
+    "build:electron": "electron-builder"
   },
   "dependencies": {
     "electron": "^36.5.0"
   },
   "devDependencies": {
     "tsx": "^4.20.3"
-  }
-
-  ,"build": {
+  },
+  "build": {
     "appId": "com.mightbehuman.app",
     "productName": "MightBeHuman",
     "files": [
