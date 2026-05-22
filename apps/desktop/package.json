@@ -5,21 +5,25 @@
   "version": "0.1.0",
   "description": "Desktop shell for MightBeHuman",
   "author": "MightBeHumanLib",
+  "main": "dist/main.js",
   "scripts": {
     "dev": "electron --require tsx/register ./src/main.ts",
+    "build:main": "esbuild ./src/main.ts --bundle --platform=node --format=esm --target=node24 --outfile=dist/main.js",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "build:electron": "electron-builder"
+    "build:electron": "pnpm run build:main && electron-builder"
   },
   "devDependencies": {
     "electron": "^36.5.0",
+    "esbuild": "^0.28.0",
     "tsx": "^4.20.3"
   },
   "build": {
     "appId": "com.mightbehuman.app",
     "productName": "MightBeHuman",
     "files": [
-      "**/*"
+      "dist/**/*",
+      "package.json"
     ],
     "directories": {
       "output": "../../dist"
