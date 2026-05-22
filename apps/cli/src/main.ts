@@ -5,6 +5,7 @@ import { resolve } from "node:path";
 import { analyzeText, compareTexts, humanizeText } from "@mightbehuman/core-engine";
 import { protectDocument } from "@mightbehuman/semantic-preservation";
 import { getDefaultHumanizationProfile, resolveHumanizationProfile, type HumanizationProfile } from "@mightbehuman/config-system";
+import { spawn } from "node:child_process";
 
 interface ParsedArgs {
   readonly command: string;
@@ -113,8 +114,27 @@ function printHelp(): void {
       "  --markdown       Emit markdown",
       "  --help           Show this help",
       "  --version        Print version",
+      "",
+      "Orchestration:",
+      "  start-api        Start the API (npm workspace run dev)",
+      "  start-web        Start the web console (npm workspace run dev)",
+      "  start-desktop    Start the Electron desktop (npm workspace run dev)",
+      "  build            Run all builds (root build script)",
+      "  build:web        Build the web app",
+      "  build:docs       Build the docs site",
+      "  build:desktop    Build the desktop bundle",
+      "  package-desktop  Build desktop installer (electron-builder)",
+      "  test             Run tests",
+      "  lint             Run typecheck/lint",
     ].join("\n") + "\n",
   );
+}
+
+function runShell(command: string[]): Promise<number> {
+  return new Promise((resolve) => {
+    const proc = spawn(command.join(" "), { shell: true, stdio: "inherit" });
+    proc.on("close", (code) => resolve(typeof code === "number" ? code : 1));
+  });
 }
 
 function printOutput(value: unknown, options: Record<string, string | boolean>): void {
@@ -200,6 +220,57 @@ async function run(): Promise<void> {
       options,
     );
 
+    return;
+  }
+
+  // Orchestration commands: start/build/package/test/lint
+  if (command === "start-api") {
+    await runShell(["npm --workspace=apps/api run dev"]);
+    return;
+  }
+
+  if (command === "start-web") {
+    await runShell(["npm --workspace=apps/web run dev"]);
+    return;
+  }
+
+  if (command === "start-desktop") {
+    await runShell(["npm --workspace=apps/desktop run dev"]);
+    return;
+  }
+
+  if (command === "build") {
+    await runShell(["npm run build"]);
+    return;
+  }
+
+  if (command === "build:web") {
+    await runShell(["npm --workspace=apps/web run build"]);
+    return;
+  }
+
+  if (command === "build:docs") {
+    await runShell(["npm --workspace=apps/docs run build"]);
+    return;
+  }
+
+  if (command === "build:desktop") {
+    await runShell(["npm --workspace=apps/desktop run build:main"]);
+    return;
+  }
+
+  if (command === "package-desktop") {
+    await runShell(["npm --workspace=apps/desktop run build:electron"]);
+    return;
+  }
+
+  if (command === "test") {
+    await runShell(["npm test"]);
+    return;
+  }
+
+  if (command === "lint") {
+    await runShell(["npm run lint"]);
     return;
   }
 
