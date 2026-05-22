@@ -1,0 +1,1 @@
+:root{--lightningcss-light: ;--lightningcss-dark:initial;color-scheme:dark;--background:#060606;--surface:#ffffff0a;--border:#ffffff14;--text:#f5f5f5;--muted:#a1a1aa}*{box-sizing:border-box}html,body{min-height:100%;color:var(--text);background:linear-gradient(#090909 0%,#030303 100%);margin:0;font-family:Arial,Helvetica,sans-serif}a{color:inherit}
