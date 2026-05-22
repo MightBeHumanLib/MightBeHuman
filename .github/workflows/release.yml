@@ -11,10 +11,19 @@ permissions:
 jobs:
   build:
     name: Build installers and web
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.runner }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        include:
+          - platform: linux
+            runner: ubuntu-latest
+            targetFlag: "--linux AppImage"
+          - platform: windows
+            runner: windows-latest
+            targetFlag: "--win nsis"
+          - platform: macos
+            runner: macos-latest
+            targetFlag: "--mac dmg"
     steps:
       - uses: actions/checkout@v4
         with:
@@ -42,13 +51,15 @@ jobs:
 
       - name: Build desktop installer
         run: |
-          pnpm --filter @mightbehuman/desktop run build:electron || true
+          # Build only the platform-specific target on this runner
+          cd apps/desktop
+          npx electron-builder ${{ matrix.targetFlag }} || true
         shell: bash
 
       - name: Collect installers
         uses: actions/upload-artifact@v4
         with:
-          name: installers-${{ matrix.os }}
+          name: installers-${{ matrix.platform }}
           path: |
             dist/*.AppImage
             dist/*.exe
@@ -67,19 +78,19 @@ jobs:
       - name: Download installers (linux)
         uses: actions/download-artifact@v4
         with:
-          name: installers-ubuntu-latest
+          name: installers-linux
           path: ./dist
 
       - name: Download installers (windows)
         uses: actions/download-artifact@v4
         with:
-          name: installers-windows-latest
+          name: installers-windows
           path: ./dist
 
       - name: Download installers (macos)
         uses: actions/download-artifact@v4
         with:
-          name: installers-macos-latest
+          name: installers-macos
           path: ./dist
 
       - name: Compute tag
