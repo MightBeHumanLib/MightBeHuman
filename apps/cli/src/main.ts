@@ -184,6 +184,25 @@ async function run(): Promise<void> {
     return;
   }
 
+  if (command === "all" || command === "analyze-all") {
+    const input = await loadFromOption(options, "file", positionals[0]);
+    const analysis = analyzeText(input, profile);
+    const humanized = humanizeText(input, profile);
+    const preserved = protectDocument(input, { preserveMarkdown: true, preserveCitations: true });
+
+    printOutput(
+      {
+        analysis,
+        humanized,
+        preserved,
+        score: analysis.score,
+      },
+      options,
+    );
+
+    return;
+  }
+
   if (command === "score") {
     const input = await loadFromOption(options, "file", positionals[0]);
     const result = analyzeText(input, profile);
